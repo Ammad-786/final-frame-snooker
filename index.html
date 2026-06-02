@@ -273,6 +273,13 @@
   .price ul{list-style:none;margin:24px 0 28px;display:flex;flex-direction:column;gap:13px}
   .price ul li{display:flex;gap:11px;align-items:flex-start;font-size:.94rem;color:#cdd9d0}
   .price ul li::before{content:"✓";color:var(--neon);font-weight:800;flex:none}
+  /* per-frame rate list (game name left, price right) */
+  .price .rates{list-style:none;margin:4px 0 26px;display:flex;flex-direction:column}
+  .price .rates li{display:flex;justify-content:space-between;align-items:center;padding:14px 2px;border-bottom:1px solid var(--line)}
+  .price .rates li::before{content:none}
+  .price .rates li:last-child{border-bottom:none}
+  .price .rates li span{color:#dce6df;font-size:1.02rem;font-weight:600}
+  .price .rates li b{font-family:'Anton',sans-serif;font-weight:400;color:var(--gold);font-size:1.55rem;line-height:1}
   .price .btn{justify-content:center;margin-top:auto;width:100%}
 
   /* ====================== BOOKING ====================== */
@@ -604,48 +611,46 @@
 <section class="sec" id="pricing">
   <div class="wrap">
     <div class="sec-head reveal">
-      <span class="tag">Tables & Rooms</span>
-      <h2 class="display">Pick your experience</h2>
-      <p>From a quick frame to a private VVIP room. Message us on WhatsApp for current rates.</p>
+      <span class="tag">Rates</span>
+      <h2 class="display">Simple game rates</h2>
+      <p>Pay per frame, or go non-stop with Century by the hour. All prices in PKR.</p>
     </div>
-    <!-- TIP: replace "On request" with your real PKR rate, e.g. ₨500<small>/hour</small> -->
     <div class="price-grid">
       <div class="price reveal">
-        <h3>Standard Table</h3>
-        <p class="sub">Full-size snooker, pay by the hour</p>
-        <div class="amt" style="font-size:2.4rem">On request</div>
-        <ul>
-          <li>Tournament-grade table</li>
-          <li>Pro cloth & glare-free lighting</li>
-          <li>Cue &amp; rest included</li>
-          <li>Walk-in or book ahead</li>
+        <h3>Pay Per Frame</h3>
+        <p class="sub">Pick your game — pay per frame</p>
+        <ul class="rates">
+          <li><span>One Ball</span><b>₨120</b></li>
+          <li><span>6 Ball</span><b>₨150</b></li>
+          <li><span>10 Ball</span><b>₨170</b></li>
+          <li><span>Full Frame</span><b>₨200</b></li>
         </ul>
-        <a href="#book" class="btn btn-ghost">Book Now</a>
+        <a href="#book" class="btn btn-ghost">Book a Frame</a>
       </div>
       <div class="price featured reveal">
-        <span class="pop">Most Popular</span>
-        <h3>VIP Lounge Table</h3>
-        <p class="sub">Premium table with sofa seating</p>
-        <div class="amt" style="font-size:2.4rem">On request</div>
+        <span class="pop">For the Pros</span>
+        <h3>Century</h3>
+        <p class="sub">Non-stop play, by the hour</p>
+        <div class="amt">₨800<small>/hour</small></div>
         <ul>
-          <li>Comfortable sofa seating</li>
-          <li>Refreshments served</li>
-          <li>PS4 for the kids</li>
-          <li>Relaxed lounge vibe</li>
+          <li>Unlimited frames in your hour</li>
+          <li>Best for serious practice</li>
+          <li>Full-size tournament table</li>
+          <li>Cue &amp; rest included</li>
         </ul>
-        <a href="#book" class="btn btn-primary">Book Now</a>
+        <a href="#book" class="btn btn-primary">Book Century</a>
       </div>
       <div class="price reveal">
-        <h3>VVIP Private Room</h3>
-        <p class="sub">Your own room, just your group</p>
-        <div class="amt" style="font-size:2.4rem">On request</div>
+        <h3>VIP &amp; VVIP</h3>
+        <p class="sub">Premium tables &amp; private room</p>
+        <div class="amt" style="font-size:2.2rem">Ask us</div>
         <ul>
-          <li>Private room &amp; full-size table</li>
-          <li>Sofa seating for your crew</li>
-          <li>Premium comfort &amp; privacy</li>
-          <li>Great for parties &amp; events</li>
+          <li>VIP lounge table + sofa seating</li>
+          <li>VVIP private room</li>
+          <li>Refreshments &amp; PS4</li>
+          <li>Rates on request</li>
         </ul>
-        <a href="#book" class="btn btn-ghost">Book Now</a>
+        <a href="#book" class="btn btn-ghost">Enquire</a>
       </div>
     </div>
   </div>

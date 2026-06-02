@@ -2,7 +2,7 @@
 .DS_Store
 **/.DS_Store
 
-# Claude Code — never publish
+# Local agent / tooling config — never publish
 .claude/
 
 # Editor / local tooling
