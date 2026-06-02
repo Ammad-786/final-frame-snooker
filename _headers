@@ -1,0 +1,10 @@
+# Security headers — applied automatically by Netlify and Cloudflare Pages.
+# (Plain static hosting that ignores this file still works; the page also ships
+#  a Content-Security-Policy via a <meta> tag as a fallback.)
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; frame-src https://www.google.com https://maps.google.com; form-action 'self'; upgrade-insecure-requests

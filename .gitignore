@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Claude Code — never publish
+.claude/
+
+# Editor / local tooling
+.vscode/
+*.log
+
+# OS / misc
+Thumbs.db

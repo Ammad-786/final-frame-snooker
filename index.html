@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- ===== Security hardening (static site = no server, no database, no secrets) =====
+     For full protection also set these as real HTTP headers at your host (Netlify/
+     Cloudflare): X-Frame-Options: DENY, X-Content-Type-Options: nosniff,
+     Strict-Transport-Security, Permissions-Policy. See _headers / netlify.toml notes. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; frame-src https://www.google.com https://maps.google.com; form-action 'self'; upgrade-insecure-requests" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+<title>Final Frame Snooker Club — Pakistan's Premium Snooker Lounge</title>
+<meta name="description" content="Final Frame Snooker Club — book premium snooker & billiards tables online. Pro tables, café, AC lounge. Book your frame in seconds." />
+
+<!-- Open Graph (link preview on WhatsApp / FB) -->
+<meta property="og:title" content="Final Frame Snooker Club" />
+<meta property="og:description" content="Pakistan's premium snooker lounge. Book your table online in seconds." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="logo.png" />
+
+<!-- favicon (browser tab icon) -->
+<link rel="icon" type="image/png" href="logo.png" />
+<link rel="apple-touch-icon" href="logo.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<style>
+  /* ============ CONFIG: change these brand values here ============ */
+  :root{
+    --green-deep:#0a1f14;     /* felt deep */
+    --green:#0d3b24;          /* table felt */
+    --green-bright:#1db954;   /* accent glow-ish */
+    --neon:#2fffa3;           /* neon mint */
+    --gold:#e8c468;           /* gold accent */
+    --gold-soft:#f4e3b0;
+    --ink:#06120c;
+    --cream:#f6f4ec;
+    --muted:#9fb3a8;
+    --card:rgba(255,255,255,.04);
+    --line:rgba(255,255,255,.10);
+    --radius:22px;
+    --maxw:1180px;
+    --shadow:0 30px 80px -30px rgba(0,0,0,.7);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+    background:var(--ink);
+    color:var(--cream);
+    overflow-x:hidden;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 22px}
+  section{position:relative}
+
+  .display{font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.012em;line-height:.96}
+
+  /* ambient background glow */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(60% 50% at 80% -5%, rgba(47,255,163,.10), transparent 60%),
+      radial-gradient(55% 45% at 0% 30%, rgba(232,196,104,.08), transparent 60%),
+      radial-gradient(70% 60% at 50% 120%, rgba(13,59,36,.55), transparent 60%);
+  }
+
+  /* ====================== NAV ====================== */
+  header.nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    transition:.35s ease;
+  }
+  .nav-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    margin:14px auto;max-width:var(--maxw);width:calc(100% - 28px);
+    padding:12px 18px;border-radius:18px;
+    background:rgba(8,16,11,.55);backdrop-filter:blur(14px);
+    border:1px solid var(--line);transition:.35s;
+  }
+  header.nav.scrolled .nav-inner{background:rgba(6,12,8,.85);box-shadow:var(--shadow)}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:1.05rem}
+  .brand .ball{
+    width:30px;height:30px;border-radius:50%;
+    background:radial-gradient(circle at 32% 30%, #fff 0 8%, #d7263d 30% 70%, #7d0d1c 100%);
+    box-shadow:0 4px 14px rgba(215,38,61,.5);flex:none;
+  }
+  .brand b{color:var(--cream)}
+  .brand span{color:var(--gold)}
+  .brand .logo{height:42px;width:auto;display:block;flex:none}
+  .brand.foot .logo{height:60px}
+  .nav-links{display:flex;gap:28px;align-items:center}
+  .nav-links a{font-size:.92rem;color:var(--muted);font-weight:600;transition:.2s}
+  .nav-links a:hover{color:var(--cream)}
+  .nav-cta{
+    background:linear-gradient(135deg,var(--neon),var(--green-bright));
+    color:#04150c;padding:11px 20px;border-radius:12px;font-weight:800;font-size:.9rem;
+    box-shadow:0 8px 24px -6px rgba(47,255,163,.5);transition:.25s;
+  }
+  .nav-cta:hover{transform:translateY(-2px);box-shadow:0 14px 30px -6px rgba(47,255,163,.6)}
+  .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none}
+  .burger span{width:24px;height:2px;background:var(--cream);border-radius:2px;transition:.3s;transform-origin:center}
+  .burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .burger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+  .burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  /* menu extras — hidden on desktop, shown inside the mobile drawer */
+  .nav-close,.nav-eyebrow,.nav-foot,.nav-backdrop{display:none}
+
+  /* ====================== HERO ====================== */
+  .hero{
+    min-height:100svh;display:flex;align-items:center;position:relative;z-index:1;
+    padding:130px 0 80px;
+  }
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;width:100%}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:9px;font-size:.78rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.18em;color:var(--neon);
+    background:rgba(47,255,163,.08);border:1px solid rgba(47,255,163,.25);
+    padding:8px 14px;border-radius:100px;margin-bottom:24px;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--neon);box-shadow:0 0 12px var(--neon);animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+
+  .hero h1{font-size:clamp(3.2rem,8vw,6.6rem);margin-bottom:22px}
+  .hero h1 .line2{
+    background:linear-gradient(135deg,var(--gold-soft),var(--gold) 60%,#b8902f);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p.lead{font-size:1.12rem;color:#c9d6cd;max-width:480px;margin-bottom:34px}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:42px}
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;font-weight:800;cursor:pointer;
+    border:none;font-family:inherit;font-size:1rem;border-radius:14px;padding:16px 26px;transition:.25s;
+  }
+  .btn-primary{background:linear-gradient(135deg,var(--neon),var(--green-bright));color:#04150c;box-shadow:0 12px 34px -8px rgba(47,255,163,.55)}
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 18px 40px -8px rgba(47,255,163,.7)}
+  .btn-ghost{background:var(--card);border:1px solid var(--line);color:var(--cream)}
+  .btn-ghost:hover{background:rgba(255,255,255,.09);transform:translateY(-3px)}
+
+  .hero-stats{display:flex;gap:34px;flex-wrap:wrap}
+  .hero-stats .s b{font-family:'Anton',sans-serif;font-size:2.2rem;color:var(--gold);display:block;line-height:1}
+  .hero-stats .s span{font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+
+  /* ============ hero visual — realistic snooker table ============ */
+  .hero-copy{position:relative;z-index:2;min-width:0}
+  .hero-visual{position:relative;display:flex;justify-content:center;align-items:center;min-width:0;z-index:1}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+  /* perspective wrapper gives the real 3D tilt */
+  .table-stage{position:relative;width:100%;max-width:330px;perspective:1150px;perspective-origin:50% 32%;animation:float 7s ease-in-out infinite}
+
+  /* wooden cabinet — tilted into 3D */
+  .table{
+    position:relative;width:100%;aspect-ratio:1/1.78;border-radius:24px;padding:7.5%;
+    transform-style:preserve-3d;transform:rotateX(46deg);
+    background:linear-gradient(150deg,#8a5526 0%,#5c3417 45%,#3f220e 100%);
+    box-shadow:0 50px 70px -28px rgba(0,0,0,.85),
+      inset 0 2px 3px rgba(255,214,158,.4),
+      inset 0 -4px 10px rgba(0,0,0,.65);
+  }
+  .table::before{content:"";position:absolute;inset:4%;border-radius:16px;border:2px solid rgba(232,196,104,.30);pointer-events:none;z-index:2}
+
+  /* leather cushion rail */
+  .cushion{
+    position:absolute;inset:7.5%;border-radius:9px;padding:3.4%;transform-style:preserve-3d;
+    background:linear-gradient(160deg,#0e5031,#083320);
+    box-shadow:inset 0 0 16px rgba(0,0,0,.6), inset 0 2px 2px rgba(255,255,255,.05);
+  }
+  /* baize playing surface */
+  .felt{
+    position:relative;width:100%;height:100%;border-radius:3px;transform-style:preserve-3d;
+    background:
+      radial-gradient(120% 45% at 50% 10%, rgba(120,230,175,.16), transparent 60%),
+      radial-gradient(120% 55% at 50% 100%, rgba(0,0,0,.30), transparent 60%),
+      linear-gradient(180deg,#14784e 0%,#0f6440 50%,#0a4e32 100%);
+    box-shadow:inset 0 0 40px rgba(0,0,0,.45);
+  }
+  .felt::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.4;border-radius:3px;
+    background:repeating-linear-gradient(180deg,rgba(255,255,255,.025) 0 2px,transparent 2px 4px)}
+
+  /* markings (lie flat on the cloth) */
+  .felt .baulk{position:absolute;left:0;right:0;top:80%;height:1.5px;background:rgba(255,255,255,.20)}
+  .felt .dee{position:absolute;left:50%;top:80%;width:34%;aspect-ratio:2/1;transform:translateX(-50%);
+    border:1.5px solid rgba(255,255,255,.20);border-top:none;border-radius:0 0 200px 200px}
+
+  /* glossy balls — billboarded so they face the camera (look spherical, not flat) */
+  .pb{
+    position:absolute;width:5.6%;aspect-ratio:1;border-radius:50%;z-index:2;
+    transform:translate(-50%,-50%) rotateX(-46deg) translateZ(6px);
+    background:
+      radial-gradient(circle at 34% 27%, rgba(255,255,255,.92) 0%, rgba(255,255,255,0) 26%),
+      radial-gradient(circle at 50% 50%, var(--c1) 0%, var(--c2) 58%, var(--c3) 100%);
+    box-shadow:0 4px 7px rgba(0,0,0,.6), inset -3px -4px 6px rgba(0,0,0,.5), inset 2px 2px 4px rgba(255,255,255,.2);
+  }
+  .pb.red{--c1:#ff6a6a;--c2:#d11f2d;--c3:#7c0d16}
+  .pb.yellow{--c1:#ffe98a;--c2:#f3c81e;--c3:#a9760a}
+  .pb.green{--c1:#6fd693;--c2:#12913f;--c3:#084a22}
+  .pb.brown{--c1:#cf9b69;--c2:#7a4a22;--c3:#3a2110}
+  .pb.blue{--c1:#7aa6f2;--c2:#1f5fd0;--c3:#0e2f78}
+  .pb.pink{--c1:#ffc1d8;--c2:#f25b94;--c3:#b21f5a}
+  .pb.black{--c1:#9a9a9a;--c2:#1c1c1c;--c3:#000}
+  .pb.white{--c1:#ffffff;--c2:#eeede4;--c3:#c2c0b4}
+
+  /* pockets */
+  .pocket{position:absolute;width:9%;aspect-ratio:1;border-radius:50%;z-index:5;
+    background:radial-gradient(circle at 38% 34%,#3a3a3a,#0a0a0a 65%,#000);
+    box-shadow:inset 0 0 9px #000, inset 0 3px 4px rgba(0,0,0,.8), 0 1px 2px rgba(0,0,0,.6)}
+  .pocket.tl{top:2.4%;left:2.4%}.pocket.tr{top:2.4%;right:2.4%}
+  .pocket.bl{bottom:2.4%;left:2.4%}.pocket.br{bottom:2.4%;right:2.4%}
+  .pocket.ml{top:50%;left:1.2%;transform:translateY(-50%);width:7%}
+  .pocket.mr{top:50%;right:1.2%;transform:translateY(-50%);width:7%}
+
+  .float-badge{
+    position:absolute;z-index:6;background:rgba(8,16,11,.82);backdrop-filter:blur(10px);
+    border:1px solid var(--line);border-radius:15px;padding:12px 15px;box-shadow:var(--shadow);
+    display:flex;align-items:center;gap:11px;animation:float 5s ease-in-out infinite;
+  }
+  .float-badge .ic{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-size:1.15rem;background:rgba(47,255,163,.14)}
+  .float-badge b{font-size:.9rem;display:block}
+  .float-badge span{font-size:.72rem;color:var(--muted)}
+  .fb-1{top:4%;right:-30px;animation-delay:.5s}
+  .fb-2{bottom:5%;left:-30px;animation-delay:1.2s}
+
+  /* ====================== MARQUEE ====================== */
+  .marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0;overflow:hidden;background:rgba(255,255,255,.02);position:relative;z-index:1}
+  .marquee-track{display:flex;gap:50px;white-space:nowrap;animation:scroll 22s linear infinite;width:max-content}
+  .marquee-track span{font-family:'Anton',sans-serif;font-size:1.4rem;letter-spacing:.06em;color:var(--muted);display:flex;align-items:center;gap:50px}
+  .marquee-track span::after{content:"●";color:var(--neon);font-size:.7rem}
+  @keyframes scroll{to{transform:translateX(-50%)}}
+
+  /* ====================== SECTION HEADINGS ====================== */
+  .sec{padding:100px 0;z-index:1}
+  .sec-head{text-align:center;max-width:640px;margin:0 auto 60px}
+  .tag{font-size:.78rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--neon);margin-bottom:14px;display:block}
+  .sec-head h2{font-size:clamp(2.2rem,5vw,3.6rem)}
+  .sec-head p{color:var(--muted);margin-top:14px;font-size:1.05rem}
+
+  /* ====================== FEATURES ====================== */
+  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .feature{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:30px;
+    transition:.3s;position:relative;overflow:hidden;
+  }
+  .feature::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 50% -20%,rgba(47,255,163,.10),transparent 60%);opacity:0;transition:.3s}
+  .feature:hover{transform:translateY(-6px);border-color:rgba(47,255,163,.35)}
+  .feature:hover::after{opacity:1}
+  .feature .fic{width:54px;height:54px;border-radius:15px;display:grid;place-items:center;font-size:1.6rem;background:linear-gradient(135deg,rgba(47,255,163,.16),rgba(232,196,104,.12));margin-bottom:20px}
+  .feature h3{font-size:1.25rem;margin-bottom:10px}
+  .feature p{color:var(--muted);font-size:.95rem}
+
+  /* ====================== PRICING / TABLES ====================== */
+  .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+  .price{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:34px 30px;
+    display:flex;flex-direction:column;transition:.3s;position:relative;
+  }
+  .price:hover{transform:translateY(-6px)}
+  .price.featured{
+    background:linear-gradient(160deg,rgba(47,255,163,.10),rgba(8,16,11,.4));
+    border-color:rgba(47,255,163,.4);box-shadow:0 30px 70px -30px rgba(47,255,163,.4)
+  }
+  .price .pop{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--neon),var(--green-bright));color:#04150c;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:6px 16px;border-radius:100px}
+  .price h3{font-size:1.35rem;margin-bottom:6px}
+  .price .sub{color:var(--muted);font-size:.9rem;margin-bottom:22px}
+  .price .amt{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:3.4rem;color:var(--gold);line-height:1}
+  .price .amt small{font-size:1rem;color:var(--muted);font-family:'Plus Jakarta Sans';font-weight:600}
+  .price ul{list-style:none;margin:24px 0 28px;display:flex;flex-direction:column;gap:13px}
+  .price ul li{display:flex;gap:11px;align-items:flex-start;font-size:.94rem;color:#cdd9d0}
+  .price ul li::before{content:"✓";color:var(--neon);font-weight:800;flex:none}
+  .price .btn{justify-content:center;margin-top:auto;width:100%}
+
+  /* ====================== BOOKING ====================== */
+  .booking-wrap{
+    background:linear-gradient(160deg,rgba(13,59,36,.5),rgba(8,16,11,.6));
+    border:1px solid var(--line);border-radius:30px;overflow:hidden;
+    display:grid;grid-template-columns:.9fr 1.1fr;box-shadow:var(--shadow);
+  }
+  .booking-side{padding:48px 42px;background:
+      radial-gradient(80% 60% at 0% 0%,rgba(47,255,163,.12),transparent 60%);
+      display:flex;flex-direction:column;justify-content:center}
+  .booking-side h2{font-size:clamp(2rem,4vw,3rem);margin-bottom:16px;line-height:1.05}
+  .booking-side p{color:var(--muted);margin-bottom:28px}
+  .booking-side .feat{display:flex;gap:14px;align-items:center;margin-bottom:18px}
+  .booking-side .feat .ic{width:42px;height:42px;border-radius:12px;background:rgba(47,255,163,.12);display:grid;place-items:center;font-size:1.2rem;flex:none}
+  .booking-side .feat b{display:block;font-size:.97rem}
+  .booking-side .feat span{font-size:.84rem;color:var(--muted)}
+
+  form.booking{padding:44px 40px;display:flex;flex-direction:column;gap:18px}
+  .field{display:flex;flex-direction:column;gap:8px}
+  .field label{font-size:.84rem;font-weight:700;color:#c9d6cd;letter-spacing:.02em}
+  .field input,.field select{
+    background:rgba(0,0,0,.3);border:1px solid var(--line);color:var(--cream);
+    padding:14px 16px;border-radius:13px;font-family:inherit;font-size:.97rem;transition:.2s;
+  }
+  .field input:focus,.field select:focus{outline:none;border-color:var(--neon);box-shadow:0 0 0 3px rgba(47,255,163,.15)}
+  .field select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232fffa3' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  form.booking .btn-primary{justify-content:center;margin-top:6px}
+  .form-note{font-size:.8rem;color:var(--muted);text-align:center;display:flex;align-items:center;gap:8px;justify-content:center}
+
+  /* ====================== GALLERY — 3D COVERFLOW ====================== */
+  .coverflow{position:relative;height:min(60vh,500px);margin-top:30px;
+    perspective:1800px;perspective-origin:50% 50%;overflow:hidden;
+    -webkit-user-select:none;user-select:none;touch-action:pan-y}
+  /* giant ghost number drifting behind the deck */
+  .cf-ghost{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);z-index:0;pointer-events:none;
+    font-family:'Anton',sans-serif;font-size:min(46vh,360px);line-height:.8;
+    color:transparent;-webkit-text-stroke:2px rgba(47,255,163,.10);letter-spacing:.02em;
+    transition:opacity .5s}
+  .cf-stage{position:absolute;inset:0;transform-style:preserve-3d}
+  .cf-card{position:absolute;top:50%;left:50%;width:min(68vw,338px);aspect-ratio:9/13;margin:0;
+    border-radius:20px;overflow:hidden;border:1px solid var(--line);background:#06120c;
+    transform:translate(-50%,-50%);transform-origin:center center;cursor:pointer;
+    transition:transform .65s cubic-bezier(.4,0,.15,1), opacity .55s, box-shadow .45s, filter .55s;
+    box-shadow:0 30px 60px -28px rgba(0,0,0,.85)}
+  .cf-card img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+  .cf-card .cf-tag{position:absolute;top:12px;left:12px;z-index:2;font-size:.66rem;font-weight:800;
+    letter-spacing:.14em;text-transform:uppercase;color:#cdebd9;background:rgba(6,18,12,.6);
+    backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.14);padding:5px 10px;border-radius:100px;
+    opacity:0;transition:.4s}
+  .cf-card::after{content:"";position:absolute;inset:0;opacity:0;background:linear-gradient(180deg,rgba(4,10,7,.15),rgba(4,10,7,.45));transition:.5s}
+  .cf-card.active{cursor:zoom-in;border-color:rgba(47,255,163,.55);
+    box-shadow:0 0 0 1px rgba(47,255,163,.5), 0 26px 70px -18px rgba(47,255,163,.45), 0 40px 80px -30px #000}
+  .cf-card.active .cf-tag{opacity:1}
+  .cf-card:not(.active){filter:saturate(.7) brightness(.62)}
+  .cf-card:not(.active)::after{opacity:1}
+
+  .cf-arrow{position:absolute;top:46%;transform:translateY(-50%);z-index:6;width:54px;height:54px;border-radius:50%;
+    background:rgba(8,16,11,.55);backdrop-filter:blur(8px);border:1px solid var(--line);color:#fff;font-size:1.8rem;line-height:1;
+    cursor:pointer;display:grid;place-items:center;transition:.25s}
+  .cf-arrow:hover{background:var(--neon);color:#04150c;border-color:var(--neon);box-shadow:0 0 26px -4px var(--neon)}
+  .cf-arrow.prev{left:max(14px,4vw)}.cf-arrow.next{right:max(14px,4vw)}
+
+  .cf-caption{text-align:center;margin-top:26px;padding:0 20px;min-height:74px}
+  .cf-caption h3{font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;
+    font-size:clamp(2rem,4.6vw,3.4rem);line-height:.96;letter-spacing:.015em;
+    background:linear-gradient(180deg,#fff 30%,#bfece0);-webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 2px 18px rgba(47,255,163,.22))}
+  .cf-caption p{color:var(--neon);font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.28em;margin-top:10px}
+  .cf-caption.swap{animation:capIn .55s cubic-bezier(.16,1,.3,1)}
+  @keyframes capIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+  .cf-dots{display:flex;gap:9px;justify-content:center;margin:18px auto 0}
+  .cf-dots button{width:9px;height:9px;border-radius:50%;border:none;background:rgba(255,255,255,.4);cursor:pointer;transition:.3s;padding:0}
+  .cf-dots button.active{background:var(--neon);width:28px;border-radius:6px;box-shadow:0 0 12px -1px var(--neon)}
+
+  /* ====================== LIGHTBOX (iris-reveal + flip) ====================== */
+  .lightbox{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+    padding:70px 18px 28px;
+    background:rgba(3,7,5,.92);backdrop-filter:blur(14px);visibility:hidden;opacity:0;
+    clip-path:circle(0% at 50% 55%);transition:clip-path .55s cubic-bezier(.7,0,.2,1),opacity .4s,visibility .55s}
+  .lightbox.open{visibility:visible;opacity:1;clip-path:circle(150% at 50% 50%)}
+  .lb-stage{position:relative;perspective:1600px;max-width:92vw;max-height:72vh;display:flex;align-items:center;justify-content:center}
+  .lb-img{max-width:92vw;max-height:72vh;border-radius:16px;box-shadow:0 40px 100px -30px #000, 0 0 0 1px rgba(255,255,255,.06);object-fit:contain}
+  .lb-img.in{animation:lbIn .6s cubic-bezier(.16,1,.3,1)}
+  @keyframes lbIn{from{opacity:0;transform:translateY(10px) rotateY(18deg) scale(.86)}to{opacity:1;transform:none}}
+  .lb-cap{position:static;text-align:center;color:#aebdb4;font-size:.82rem;font-weight:700;flex:none;
+    text-transform:uppercase;letter-spacing:.16em;padding:0 20px;z-index:2}
+  .lb-cap b{font-family:'Anton',sans-serif;font-weight:400;color:#fff;font-size:1.35rem;letter-spacing:.02em;
+    display:block;margin-bottom:5px;text-shadow:0 2px 20px rgba(47,255,163,.25)}
+  .lb-close,.lb-arrow{position:absolute;z-index:3;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid var(--line);
+    color:#fff;cursor:pointer;display:grid;place-items:center;transition:.25s}
+  .lb-close{top:22px;right:26px;width:48px;height:48px;font-size:1.7rem}
+  .lb-arrow{top:50%;transform:translateY(-50%);width:54px;height:54px;font-size:1.9rem}
+  .lb-prev{left:3vw}.lb-next{right:3vw}
+  .lb-close:hover,.lb-arrow:hover{background:var(--neon);color:#04150c;border-color:var(--neon)}
+
+  /* ====================== LOCATION ====================== */
+  .loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:stretch}
+  .loc-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:38px}
+  .loc-card h3{font-size:1.5rem;margin-bottom:22px}
+  .loc-item{display:flex;gap:15px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .loc-item:last-child{border:none}
+  .loc-item .ic{width:44px;height:44px;border-radius:12px;background:rgba(232,196,104,.12);display:grid;place-items:center;font-size:1.2rem;flex:none}
+  .loc-item b{display:block;font-size:.95rem}
+  .loc-item span{color:var(--muted);font-size:.9rem}
+  .map-card{border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);min-height:340px;background:#0a2417}
+  .map-card iframe{width:100%;height:100%;min-height:340px;border:0;filter:grayscale(.2) contrast(1.05)}
+
+  /* ====================== FOOTER ====================== */
+  footer{border-top:1px solid var(--line);padding:60px 0 30px;position:relative;z-index:1;margin-top:40px}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px;margin-bottom:40px}
+  .foot-grid p{color:var(--muted);font-size:.95rem;margin-top:16px;max-width:320px}
+  .foot-col h4{font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+  .foot-col a{display:block;color:var(--muted);font-size:.94rem;margin-bottom:12px;transition:.2s}
+  .foot-col a:hover{color:var(--cream)}
+  .socials{display:flex;gap:12px;margin-top:20px}
+  .socials a{width:42px;height:42px;border-radius:12px;background:var(--card);border:1px solid var(--line);display:grid;place-items:center;font-size:1.1rem;transition:.25s}
+  .socials a:hover{background:var(--neon);color:#04150c;transform:translateY(-3px)}
+  .foot-bottom{border-top:1px solid var(--line);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:.85rem}
+
+  /* floating whatsapp */
+  .wa-float{position:fixed;bottom:24px;right:24px;z-index:60;width:60px;height:60px;border-radius:50%;background:#25d366;display:grid;place-items:center;box-shadow:0 12px 30px -6px rgba(37,211,102,.6);animation:float 4s ease-in-out infinite;transition:.25s}
+  .wa-float:hover{transform:scale(1.1)}
+  .wa-float svg{width:32px;height:32px;fill:#fff}
+  /* when the mobile menu is open: lock scroll & hide the floating button */
+  body.nav-open{overflow:hidden}
+  body.nav-open .wa-float{opacity:0;visibility:hidden;pointer-events:none}
+
+  /* reveal animation */
+  .reveal{opacity:0;transform:translateY(34px);transition:.8s cubic-bezier(.16,1,.3,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ====================== RESPONSIVE ====================== */
+  @media(max-width:900px){
+    /* ---- mobile slide-in drawer ----
+       z-index order (all share the header stacking context):
+       backdrop 52  <  burger 53  <  panel 60   → panel sits ON TOP so its buttons are clickable */
+    .nav-inner{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(6,12,8,.92)}
+    .burger{display:flex;position:relative;z-index:53}
+
+    /* the BLUR lives here, on the background only — never on the menu panel */
+    .nav-backdrop{display:block;position:fixed;inset:0;z-index:52;background:rgba(2,6,4,.5);
+      backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+      opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s}
+    .nav-backdrop.open{opacity:1;visibility:visible}
+
+    .nav-links{
+      position:fixed;top:0;right:0;bottom:0;z-index:60;width:84%;max-width:340px;flex-direction:column;
+      align-items:stretch;gap:0;padding:26px 26px 30px;border-left:1px solid rgba(47,255,163,.16);
+      border-radius:26px 0 0 26px;pointer-events:none;
+      background:linear-gradient(165deg,#0c2017 0%,#06120c 60%);
+      box-shadow:-30px 0 80px -20px rgba(0,0,0,.8);
+      transform:translateX(105%);transition:transform .45s cubic-bezier(.5,0,.15,1)}
+    .nav-links.open{transform:none;pointer-events:auto}
+
+    .nav-close{display:grid;place-items:center;position:absolute;top:18px;right:18px;width:42px;height:42px;
+      border-radius:50%;background:rgba(255,255,255,.06);border:1px solid var(--line);color:#fff;
+      font-size:1.7rem;line-height:1;cursor:pointer;transition:.25s}
+    .nav-close:hover{background:var(--neon);color:#04150c;transform:rotate(90deg)}
+    .nav-eyebrow{display:block;font-size:.72rem;font-weight:800;letter-spacing:.28em;text-transform:uppercase;
+      color:var(--neon);margin:14px 4px 18px}
+
+    .nav-links>a{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:1.6rem;letter-spacing:.02em;
+      color:var(--cream);padding:15px 4px;border-bottom:1px solid rgba(255,255,255,.07);
+      display:flex;align-items:center;justify-content:space-between;
+      opacity:0;transform:translateX(26px);transition:color .2s, opacity .5s, transform .5s}
+    .nav-links>a::after{content:"›";color:var(--neon);font-size:1.4rem;opacity:.6}
+    .nav-links>a:hover{color:var(--neon)}
+    .nav-links.open>a{opacity:1;transform:none}
+    .nav-links.open>a:nth-child(3){transition-delay:.06s}
+    .nav-links.open>a:nth-child(4){transition-delay:.12s}
+    .nav-links.open>a:nth-child(5){transition-delay:.18s}
+    .nav-links.open>a:nth-child(6){transition-delay:.24s}
+    .nav-links.open>.nav-cta{transition-delay:.30s}
+
+    .nav-links .nav-cta{margin-top:22px;justify-content:center;font-family:'Anton',sans-serif;font-size:1.35rem;
+      letter-spacing:.03em;color:#04150c;padding:15px;border-radius:14px;border:none}
+    .nav-links .nav-cta::after{content:none}
+
+    .nav-foot{display:flex;flex-direction:column;gap:5px;margin-top:auto;padding-top:22px}
+    .nav-foot a{font-size:1.05rem;font-weight:800;color:var(--neon)}
+    .nav-foot span{font-size:.8rem;color:var(--muted)}
+    .hero-grid{grid-template-columns:1fr;gap:60px}
+    .hero-visual{order:-1}
+    .table-stage{max-width:290px}
+    .fb-1{right:-14px}.fb-2{left:-14px}
+    .features,.price-grid{grid-template-columns:1fr}
+    .price.featured{order:-1}
+    .booking-wrap{grid-template-columns:1fr}
+    .booking-side{padding:40px 30px}
+    form.booking{padding:34px 26px}
+    .coverflow{height:68vh}
+    .cf-card{width:min(76vw,300px)}
+    .cf-arrow{width:46px;height:46px;font-size:1.5rem}
+    .cf-caption{bottom:50px}
+    .lb-arrow{width:46px;height:46px}.lb-prev{left:1vw}.lb-next{right:1vw}
+    .lb-close{top:14px;right:14px}
+    .loc-grid{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr;gap:30px}
+    .sec{padding:70px 0}
+    .hero{padding:120px 0 60px}
+  }
+  @media(max-width:480px){
+    .row2{grid-template-columns:1fr}
+    .hero-stats{gap:22px}
+    .float-badge{display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#home" class="brand">
+      <img src="logo.png" alt="Final Frame Snooker Club" class="logo" onerror="this.style.display='none';this.nextElementSibling.querySelector('.ball').style.display='block'" />
+      <span style="display:flex;align-items:center;gap:12px"><span class="ball" style="display:none"></span><span>Final&nbsp;<b>Frame</b></span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <button class="nav-close" id="navClose" aria-label="Close menu" onclick="closeMenu()">×</button>
+      <span class="nav-eyebrow">Menu</span>
+      <a href="#why" onclick="closeMenu()">Why Us</a>
+      <a href="#pricing" onclick="closeMenu()">Pricing</a>
+      <a href="#gallery" onclick="closeMenu()">Gallery</a>
+      <a href="#visit" onclick="closeMenu()">Visit</a>
+      <a href="#book" class="nav-cta" onclick="closeMenu()">🎱 Book a Table</a>
+      <div class="nav-foot">
+        <a href="tel:+923155482934">📞 0315 5482934</a>
+        <span>Open 24/7 · Gulzar-e-Quaid, Islamabad</span>
+      </div>
+    </nav>
+    <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="nav-backdrop" id="navBackdrop" onclick="closeMenu()"></div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="home">
+  <div class="wrap hero-grid">
+    <div class="hero-copy reveal">
+      <span class="eyebrow"><span class="dot"></span> Open 24/7 · Book your table now</span>
+      <h1 class="display">Pot the perfect<br><span class="line2">final frame.</span></h1>
+      <p class="lead">Pakistan's premium snooker lounge — open 24/7. 8 pro tables, a VIP lounge, a private VVIP room, refreshments, PS4 for the kids & an unbeatable vibe. Book your frame in seconds.</p>
+      <div class="hero-cta">
+        <a href="#book" class="btn btn-primary">🎱 Book Your Table</a>
+        <a href="#pricing" class="btn btn-ghost">View Pricing</a>
+      </div>
+      <div class="hero-stats">
+        <div class="s"><b>8</b><span>Pro Tables</span></div>
+        <div class="s"><b>24/7</b><span>Always Open</span></div>
+        <div class="s"><b>VIP</b><span>+ VVIP Rooms</span></div>
+      </div>
+    </div>
+
+    <div class="hero-visual reveal">
+      <div class="table-stage">
+        <div class="float-badge fb-1"><div class="ic">⚡</div><div><b>Instant Booking</b><span>via WhatsApp</span></div></div>
+        <div class="float-badge fb-2"><div class="ic">🏆</div><div><b>Pro Tables</b><span>Tournament grade</span></div></div>
+        <div class="table">
+          <div class="cushion">
+            <div class="felt">
+              <span class="baulk"></span><span class="dee"></span>
+              <!-- 15 reds, racked in a triangle -->
+              <span class="pb red" style="left:39.2%;top:15%"></span>
+              <span class="pb red" style="left:44.6%;top:15%"></span>
+              <span class="pb red" style="left:50%;top:15%"></span>
+              <span class="pb red" style="left:55.4%;top:15%"></span>
+              <span class="pb red" style="left:60.8%;top:15%"></span>
+              <span class="pb red" style="left:41.9%;top:17.6%"></span>
+              <span class="pb red" style="left:47.3%;top:17.6%"></span>
+              <span class="pb red" style="left:52.7%;top:17.6%"></span>
+              <span class="pb red" style="left:58.1%;top:17.6%"></span>
+              <span class="pb red" style="left:44.6%;top:20.2%"></span>
+              <span class="pb red" style="left:50%;top:20.2%"></span>
+              <span class="pb red" style="left:55.4%;top:20.2%"></span>
+              <span class="pb red" style="left:47.3%;top:22.8%"></span>
+              <span class="pb red" style="left:52.7%;top:22.8%"></span>
+              <span class="pb red" style="left:50%;top:25.4%"></span>
+              <!-- colours on their spots -->
+              <span class="pb black"  style="left:50%;top:9%"></span>
+              <span class="pb pink"   style="left:50%;top:28%"></span>
+              <span class="pb blue"   style="left:50%;top:50%"></span>
+              <span class="pb green"  style="left:34%;top:80%"></span>
+              <span class="pb brown"  style="left:50%;top:80%"></span>
+              <span class="pb yellow" style="left:66%;top:80%"></span>
+              <!-- cue ball in the D -->
+              <span class="pb white"  style="left:43%;top:84%"></span>
+            </div>
+          </div>
+          <span class="pocket tl"></span><span class="pocket tr"></span>
+          <span class="pocket bl"></span><span class="pocket br"></span>
+          <span class="pocket ml"></span><span class="pocket mr"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span>SNOOKER &nbsp; POOL &nbsp; BILLIARDS &nbsp; CAFÉ &nbsp; TOURNAMENTS &nbsp; PRO TABLES &nbsp; LIVE MATCHES</span>
+    <span>SNOOKER &nbsp; POOL &nbsp; BILLIARDS &nbsp; CAFÉ &nbsp; TOURNAMENTS &nbsp; PRO TABLES &nbsp; LIVE MATCHES</span>
+  </div>
+</div>
+
+<!-- ============ WHY US ============ -->
+<section class="sec" id="why">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag">Why Final Frame</span>
+      <h2 class="display">Built for players<br>who love the game</h2>
+      <p>Everything dialled in — from the cloth on the slate to the chai in your cup.</p>
+    </div>
+    <div class="features">
+      <div class="feature reveal"><div class="fic">🎱</div><h3>8 Pro Tables</h3><p>Eight tournament-grade, full-size English snooker tables with championship cloth and glare-free pro lighting on every one.</p></div>
+      <div class="feature reveal"><div class="fic">👑</div><h3>VVIP Private Room</h3><p>Your own private room with a full-size table and comfortable sofa seating — a premium session, just for you and your crew.</p></div>
+      <div class="feature reveal"><div class="fic">🛋️</div><h3>VIP Lounge Table</h3><p>A premium table in our lounge with relaxed sofa seating and refreshments served right where you play.</p></div>
+      <div class="feature reveal"><div class="fic">🎮</div><h3>PS4 for the Kids</h3><p>Bring the family — there's a PlayStation 4 to keep the kids entertained while you take your shots.</p></div>
+      <div class="feature reveal"><div class="fic">🕒</div><h3>Open 24/7</h3><p>The doors never close. Walk in or book a table any time of day or night, every single day of the week.</p></div>
+      <div class="feature reveal"><div class="fic">📱</div><h3>Easy WhatsApp Booking</h3><p>Reserve your table in seconds — pick a date, time and table, then confirm on WhatsApp. No queues, no waiting.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section class="sec" id="pricing">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag">Tables & Rooms</span>
+      <h2 class="display">Pick your experience</h2>
+      <p>From a quick frame to a private VVIP room. Message us on WhatsApp for current rates.</p>
+    </div>
+    <!-- TIP: replace "On request" with your real PKR rate, e.g. ₨500<small>/hour</small> -->
+    <div class="price-grid">
+      <div class="price reveal">
+        <h3>Standard Table</h3>
+        <p class="sub">Full-size snooker, pay by the hour</p>
+        <div class="amt" style="font-size:2.4rem">On request</div>
+        <ul>
+          <li>Tournament-grade table</li>
+          <li>Pro cloth & glare-free lighting</li>
+          <li>Cue &amp; rest included</li>
+          <li>Walk-in or book ahead</li>
+        </ul>
+        <a href="#book" class="btn btn-ghost">Book Now</a>
+      </div>
+      <div class="price featured reveal">
+        <span class="pop">Most Popular</span>
+        <h3>VIP Lounge Table</h3>
+        <p class="sub">Premium table with sofa seating</p>
+        <div class="amt" style="font-size:2.4rem">On request</div>
+        <ul>
+          <li>Comfortable sofa seating</li>
+          <li>Refreshments served</li>
+          <li>PS4 for the kids</li>
+          <li>Relaxed lounge vibe</li>
+        </ul>
+        <a href="#book" class="btn btn-primary">Book Now</a>
+      </div>
+      <div class="price reveal">
+        <h3>VVIP Private Room</h3>
+        <p class="sub">Your own room, just your group</p>
+        <div class="amt" style="font-size:2.4rem">On request</div>
+        <ul>
+          <li>Private room &amp; full-size table</li>
+          <li>Sofa seating for your crew</li>
+          <li>Premium comfort &amp; privacy</li>
+          <li>Great for parties &amp; events</li>
+        </ul>
+        <a href="#book" class="btn btn-ghost">Book Now</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BOOKING ============ -->
+<section class="sec" id="book">
+  <div class="wrap">
+    <div class="booking-wrap reveal">
+      <div class="booking-side">
+        <h2 class="display">Reserve your<br>frame</h2>
+        <p>Fill the form and hit book — it opens WhatsApp with your details ready to send. We confirm within minutes.</p>
+        <div class="feat"><div class="ic">⚡</div><div><b>Instant confirmation</b><span>Straight to our WhatsApp</span></div></div>
+        <div class="feat"><div class="ic">🕑</div><div><b>Open 24/7</b><span>Any time, day or night</span></div></div>
+        <div class="feat"><div class="ic">💳</div><div><b>Pay at the club</b><span>Cash, Easypaisa & JazzCash</span></div></div>
+      </div>
+
+      <form class="booking" id="bookingForm" onsubmit="return sendBooking(event)">
+        <div class="field">
+          <label for="name">Your Name</label>
+          <input type="text" id="name" placeholder="e.g. Ahmed Khan" required />
+        </div>
+        <div class="field">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" placeholder="03XX XXXXXXX" required />
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="date">Date</label>
+            <input type="date" id="date" required />
+          </div>
+          <div class="field">
+            <label for="time">Time</label>
+            <input type="time" id="time" required />
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="table">Table Type</label>
+            <select id="table">
+              <option>Standard Snooker Table</option>
+              <option>VIP Lounge Table</option>
+              <option>VVIP Private Room</option>
+              <option>Any available</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="duration">Duration</label>
+            <select id="duration">
+              <option>1 Frame</option>
+              <option>1 Hour</option>
+              <option>2 Hours</option>
+              <option>3+ Hours / Event</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">📲 Book on WhatsApp</button>
+        <div class="form-note">🔒 No payment online — confirm & pay at the club.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GALLERY ============ -->
+<section class="sec" id="gallery">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag">The Vibe</span>
+      <h2 class="display">Step inside</h2>
+      <p>Drag, swipe or tap the arrows — then click the centre photo to open it full-screen.</p>
+    </div>
+
+    <div class="coverflow reveal" id="cf">
+      <div class="cf-ghost" id="cfGhost" aria-hidden="true">01</div>
+      <div class="cf-stage" id="cfStage">
+        <figure class="cf-card" data-title="Welcome to the Arena" data-sub="Open 24/7 · Gulzar-e-Quaid, Islamabad">
+          <img src="img/exterior.jpg" alt="Final Frame Snooker Club exterior" loading="lazy" /><span class="cf-tag">Exterior</span>
+        </figure>
+        <figure class="cf-card" data-title="The Main Stage" data-sub="Pro tables 1 &amp; 2 · championship cloth">
+          <img src="img/tables12.png" alt="Standard snooker tables 1 and 2" loading="lazy" /><span class="cf-tag">Main Hall</span>
+        </figure>
+        <figure class="cf-card" data-title="Break-Building Zone" data-sub="Six tournament-grade tables">
+          <img src="img/tables3456.jpg" alt="Standard snooker tables 3 to 6" loading="lazy" /><span class="cf-tag">Main Hall</span>
+        </figure>
+        <figure class="cf-card" data-title="The VIP Frame" data-sub="Premium table · sofa seating · refreshments">
+          <img src="img/vip.jpg" alt="VIP lounge table with sofa seating" loading="lazy" /><span class="cf-tag">VIP</span>
+        </figure>
+        <figure class="cf-card" data-title="Game Off the Table" data-sub="PS4 lounge for the squad &amp; kids">
+          <img src="img/ps4.jpg" alt="Lounge with leather sofas and PS4" loading="lazy" /><span class="cf-tag">Lounge</span>
+        </figure>
+        <figure class="cf-card" data-title="The VVIP Suite" data-sub="Your private room · your rules">
+          <img src="img/vvip.jpg" alt="VVIP private snooker room" loading="lazy" /><span class="cf-tag">VVIP</span>
+        </figure>
+      </div>
+
+      <button class="cf-arrow prev" id="cfPrev" aria-label="Previous">‹</button>
+      <button class="cf-arrow next" id="cfNext" aria-label="Next">›</button>
+    </div>
+
+    <div class="cf-caption" id="cfCap">
+      <h3>Welcome to the Arena</h3>
+      <p>Open 24/7 · Gulzar-e-Quaid, Islamabad</p>
+    </div>
+    <div class="cf-dots" id="cfDots"></div>
+  </div>
+</section>
+
+<!-- ============ LOCATION / VISIT ============ -->
+<section class="sec" id="visit">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag">Find Us</span>
+      <h2 class="display">Come play tonight</h2>
+    </div>
+    <div class="loc-grid reveal">
+      <div class="loc-card">
+        <h3>Final Frame Snooker Club</h3>
+        <div class="loc-item"><div class="ic">📍</div><div><b>Address</b><span>Gulzar-e-Quaid Main Road, Gulzar-e-Quaid, Islamabad 46222</span></div></div>
+        <div class="loc-item"><div class="ic">🕒</div><div><b>Opening Hours</b><span>Open 24 hours · 7 days a week</span></div></div>
+        <div class="loc-item"><div class="ic">📞</div><div><b>Phone / WhatsApp</b><span><a href="tel:+923155482934" style="color:var(--neon)">0315 5482934</a></span></div></div>
+        <div class="loc-item"><div class="ic">💳</div><div><b>Payments</b><span>Cash · Easypaisa · JazzCash</span></div></div>
+        <a href="#book" class="btn btn-primary" style="margin-top:24px;justify-content:center">Book a Table</a>
+      </div>
+      <div class="map-card">
+        <!-- Live map of the registered place "Final Frame Snooker Club" (Gulzar-e-Quaid, Islamabad) -->
+        <iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Final Frame Snooker Club location"
+          src="https://maps.google.com/maps?q=Final+Frame+Snooker+Club,+Gulzar-e-Quaid,+Islamabad&output=embed"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a href="#home" class="brand foot">
+          <img src="logo.png" alt="Final Frame Snooker Club" class="logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+          <span style="display:none;align-items:center;gap:12px;font-size:1.05rem"><span class="ball"></span><span>Final&nbsp;<b>Frame</b></span></span>
+        </a>
+        <p>Pakistan's premium snooker lounge. Pro tables, chilled café and the best vibe in town. Book your frame and bring your A-game.</p>
+        <div class="socials">
+          <a href="#" aria-label="Instagram">📸</a>
+          <a href="#" aria-label="Facebook">📘</a>
+          <a href="#" aria-label="TikTok">🎵</a>
+          <a id="waFooter" href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">💬</a>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <a href="#why">Why Us</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#visit">Visit Us</a>
+      </div>
+      <div class="foot-col">
+        <h4>Visit</h4>
+        <a href="#book">Book a Table</a>
+        <a href="#visit">Location</a>
+        <a href="#visit">Opening Hours</a>
+        <a href="#book">Group Events</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year"></span> Final Frame Snooker Club. All rights reserved.</span>
+      <span>Made with 🎱 in Pakistan</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ LIGHTBOX (fullscreen photo viewer) ============ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <button class="lb-close" id="lbClose" aria-label="Close">×</button>
+  <button class="lb-arrow lb-prev" id="lbPrev" aria-label="Previous">‹</button>
+  <div class="lb-stage"><img class="lb-img" id="lbImg" src="" alt="" /></div>
+  <button class="lb-arrow lb-next" id="lbNext" aria-label="Next">›</button>
+  <div class="lb-cap" id="lbCap"></div>
+</div>
+
+<!-- floating whatsapp -->
+<a class="wa-float" id="waFloat" href="#" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 32 32"><path d="M16 .4C7.4.4.4 7.4.4 16c0 2.8.7 5.5 2.1 7.9L.3 31.7l8-2.1c2.3 1.3 4.9 1.9 7.7 1.9 8.6 0 15.6-7 15.6-15.6S24.6.4 16 .4zm0 28.5c-2.5 0-4.9-.7-7-1.9l-.5-.3-4.7 1.2 1.3-4.6-.3-.5a12.8 12.8 0 01-2-6.9C2.8 8.7 8.7 2.9 16 2.9c7.2 0 13.1 5.9 13.1 13.1S23.2 28.9 16 28.9zm7.2-9.8c-.4-.2-2.3-1.1-2.7-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.7-.6-3.2-2-1.2-1-2-2.3-2.2-2.7-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.6.1-.2.1-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.8-.6-.7-.9-.7h-.7c-.2 0-.6.1-1 .5-.3.4-1.3 1.3-1.3 3.1s1.3 3.6 1.5 3.9c.2.2 2.6 4 6.3 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.6.2-1.8-.1-.2-.3-.3-.7-.5z"/></svg>
+</a>
+
+<script>
+/* =================================================================
+   CONFIG — change ONLY this line. Put your WhatsApp number here.
+   Format: country code + number, NO +, NO spaces, NO leading 0.
+   Pakistan example: 0300 1234567  ->  923001234567
+   ================================================================= */
+const WHATSAPP_NUMBER = "923155482934";
+/* ================================================================= */
+
+// set whatsapp links everywhere
+const waBase = "https://wa.me/" + WHATSAPP_NUMBER;
+document.getElementById("waFloat").href = waBase + "?text=" + encodeURIComponent("Hi Final Frame! I'd like to book a snooker table.");
+document.getElementById("waFooter").href = waBase;
+document.getElementById("year").textContent = new Date().getFullYear();
+
+// nav scroll state
+const nav = document.getElementById("nav");
+addEventListener("scroll", () => nav.classList.toggle("scrolled", scrollY > 30));
+
+// mobile menu
+function setMenu(open){
+  document.getElementById("navLinks").classList.toggle("open", open);
+  document.getElementById("navBackdrop").classList.toggle("open", open);
+  document.getElementById("burger").classList.toggle("open", open);
+  document.body.classList.toggle("nav-open", open);
+}
+function toggleMenu(){ setMenu(!document.getElementById("navLinks").classList.contains("open")); }
+function closeMenu(){ setMenu(false); }
+// close on Escape
+addEventListener("keydown", e => { if(e.key === "Escape") closeMenu(); });
+
+// booking -> whatsapp
+function sendBooking(e){
+  e.preventDefault();
+  const v = id => document.getElementById(id).value.trim();
+  const name = v("name"), phone = v("phone"), date = v("date"),
+        time = v("time"), table = v("table"), duration = v("duration");
+
+  const msg =
+`🎱 *NEW BOOKING — Final Frame Snooker Club*
+
+👤 Name: ${name}
+📞 Phone: ${phone}
+📅 Date: ${date}
+🕑 Time: ${time}
+🎯 Table: ${table}
+⏱️ Duration: ${duration}
+
+Please confirm my table. Thank you!`;
+
+  // noopener/noreferrer prevents the opened tab from controlling this page (reverse tabnabbing)
+  window.open(waBase + "?text=" + encodeURIComponent(msg), "_blank", "noopener,noreferrer");
+  return false;
+}
+
+// scroll reveal
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(en => { if(en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); }});
+}, {threshold:.12});
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+// set min date to today on the date picker
+document.getElementById("date").min = new Date().toISOString().split("T")[0];
+
+/* ===================== 3D COVERFLOW + ANIMATED LIGHTBOX ===================== */
+(() => {
+  const cards = [...document.querySelectorAll(".cf-card")];
+  if(!cards.length) return;
+  const dotsWrap = document.getElementById("cfDots");
+  const ghost = document.getElementById("cfGhost");
+  const capWrap = document.getElementById("cfCap");
+  const capH3 = capWrap.querySelector("h3");
+  const capP  = capWrap.querySelector("p");
+  let idx = 0, timer;
+
+  // build dots
+  cards.forEach((_, i) => {
+    const b = document.createElement("button");
+    b.setAttribute("aria-label", "Go to photo " + (i + 1));
+    b.addEventListener("click", () => go(i));
+    dotsWrap.appendChild(b);
+  });
+  const dots = [...dotsWrap.children];
+
+  // place each card in 3D relative to the active one
+  function layout(){
+    cards.forEach((card, i) => {
+      let off = i - idx;
+      const a = Math.abs(off);
+      const x   = off * 56;                       // % spread sideways
+      const z   = -a * 200;                       // push neighbours back
+      const rot = off === 0 ? 0 : (off < 0 ? 32 : -32);
+      const sc  = off === 0 ? 1 : Math.max(.62, .82 - (a-1)*0.12);
+      card.style.transform =
+        `translate(-50%,-50%) translateX(${x}%) translateZ(${z}px) rotateY(${rot}deg) scale(${sc})`;
+      card.style.opacity  = a > 2 ? 0 : 1;
+      card.style.zIndex   = 10 - a;
+      card.style.pointerEvents = a > 2 ? "none" : "auto";
+      card.classList.toggle("active", off === 0);
+    });
+    dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+    // caption + ghost number
+    const c = cards[idx];
+    capH3.textContent = c.dataset.title;
+    capP.textContent  = c.dataset.sub;
+    ghost.textContent = String(idx + 1).padStart(2, "0");
+    capWrap.classList.remove("swap"); void capWrap.offsetWidth; capWrap.classList.add("swap");
+  }
+  function go(i){ idx = (i + cards.length) % cards.length; layout(); restart(); }
+  const next = () => go(idx + 1), prev = () => go(idx - 1);
+  function restart(){ clearInterval(timer); timer = setInterval(next, 4500); }
+
+  document.getElementById("cfNext").addEventListener("click", next);
+  document.getElementById("cfPrev").addEventListener("click", prev);
+
+  // click a side card to bring it forward; click the centre one to open it
+  cards.forEach((card, i) => card.addEventListener("click", () => {
+    if(i === idx) openLB(i); else go(i);
+  }));
+
+  // drag / swipe
+  const cf = document.getElementById("cf");
+  let down = false, startX = 0, moved = false;
+  const start = x => { down = true; startX = x; moved = false; clearInterval(timer); };
+  const move  = x => { if(!down) return; if(Math.abs(x - startX) > 60){ x < startX ? next() : prev(); down = false; moved = true; } };
+  const end   = () => { down = false; restart(); };
+  cf.addEventListener("mousedown", e => start(e.clientX));
+  cf.addEventListener("mousemove", e => move(e.clientX));
+  window.addEventListener("mouseup", end);
+  cf.addEventListener("touchstart", e => start(e.touches[0].clientX), {passive:true});
+  cf.addEventListener("touchmove",  e => move(e.touches[0].clientX), {passive:true});
+  cf.addEventListener("touchend", end);
+  cf.addEventListener("mouseenter", () => clearInterval(timer));
+  cf.addEventListener("mouseleave", restart);
+
+  layout(); restart();
+
+  /* ---- Lightbox (iris reveal + flip-in) ---- */
+  const lb = document.getElementById("lightbox");
+  const lbImg = document.getElementById("lbImg");
+  const lbCap = document.getElementById("lbCap");
+  let lbIdx = 0;
+
+  function showImg(i){
+    lbIdx = (i + cards.length) % cards.length;
+    const c = cards[lbIdx], img = c.querySelector("img");
+    lbImg.src = img.src; lbImg.alt = img.alt;
+    lbCap.innerHTML = "<b>" + c.dataset.title + "</b>" + c.dataset.sub;
+    lbImg.classList.remove("in"); void lbImg.offsetWidth; lbImg.classList.add("in"); // re-trigger flip
+  }
+  function openLB(i){ showImg(i); lb.classList.add("open"); document.body.style.overflow = "hidden"; }
+  function closeLB(){ lb.classList.remove("open"); document.body.style.overflow = ""; }
+
+  document.getElementById("lbClose").addEventListener("click", closeLB);
+  document.getElementById("lbNext").addEventListener("click", () => showImg(lbIdx + 1));
+  document.getElementById("lbPrev").addEventListener("click", () => showImg(lbIdx - 1));
+  lb.addEventListener("click", e => { if(e.target === lb) closeLB(); });
+  addEventListener("keydown", e => {
+    if(!lb.classList.contains("open")) return;
+    if(e.key === "Escape") closeLB();
+    else if(e.key === "ArrowRight") showImg(lbIdx + 1);
+    else if(e.key === "ArrowLeft") showImg(lbIdx - 1);
+  });
+})();
+</script>
+</body>
+</html>
