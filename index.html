@@ -8,16 +8,19 @@
      For full protection also set these as real HTTP headers at your host (Netlify/
      Cloudflare): X-Frame-Options: DENY, X-Content-Type-Options: nosniff,
      Strict-Transport-Security, Permissions-Policy. See _headers / netlify.toml notes. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; frame-src https://www.google.com https://maps.google.com; form-action 'self'; upgrade-insecure-requests" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; frame-src https://www.google.com https://maps.google.com; form-action 'self'; upgrade-insecure-requests" />
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Final Frame Snooker Club — Pakistan's Premium Snooker Lounge</title>
-<meta name="description" content="Final Frame Snooker Club — book premium snooker & billiards tables online. Pro tables, café, AC lounge. Book your frame in seconds." />
+<meta name="description" content="Final Frame Snooker Club, Gulzar-e-Quaid, Islamabad — premium 24/7 snooker lounge. 8 pro tables, VIP lounge, VVIP room, PS4. Book your frame on WhatsApp." />
+<meta name="theme-color" content="#06120c" />
+<meta name="color-scheme" content="dark" />
 
 <!-- Open Graph (link preview on WhatsApp / FB) -->
 <meta property="og:title" content="Final Frame Snooker Club" />
-<meta property="og:description" content="Pakistan's premium snooker lounge. Book your table online in seconds." />
+<meta property="og:description" content="Pakistan's premium 24/7 snooker lounge in Islamabad. Book your table on WhatsApp." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="logo.png" />
+<meta name="twitter:card" content="summary_large_image" />
 
 <!-- favicon (browser tab icon) -->
 <link rel="icon" type="image/png" href="logo.png" />
@@ -489,6 +492,14 @@
     .hero-stats{gap:22px}
     .float-badge{display:none}
   }
+
+  /* respect users who prefer less motion (accessibility) — kill looping/auto animations */
+  @media(prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;
+      transition-duration:.001ms !important;scroll-behavior:auto !important}
+    .table-stage,.float-badge,.wa-float,.marquee-track,.slide.active img,.cf-card img{animation:none !important}
+    .reveal{opacity:1 !important;transform:none !important}
+  }
 </style>
 </head>
 <body>
@@ -730,7 +741,7 @@
           <img src="img/exterior.jpg" alt="Final Frame Snooker Club exterior" loading="lazy" /><span class="cf-tag">Exterior</span>
         </figure>
         <figure class="cf-card" data-title="The Main Stage" data-sub="Pro tables 1 &amp; 2 · championship cloth">
-          <img src="img/tables12.png" alt="Standard snooker tables 1 and 2" loading="lazy" /><span class="cf-tag">Main Hall</span>
+          <img src="img/tables12.jpg" alt="Standard snooker tables 1 and 2" loading="lazy" /><span class="cf-tag">Main Hall</span>
         </figure>
         <figure class="cf-card" data-title="Break-Building Zone" data-sub="Six tournament-grade tables">
           <img src="img/tables3456.jpg" alt="Standard snooker tables 3 to 6" loading="lazy" /><span class="cf-tag">Main Hall</span>
@@ -951,14 +962,17 @@ document.getElementById("date").min = new Date().toISOString().split("T")[0];
   document.getElementById("cfNext").addEventListener("click", next);
   document.getElementById("cfPrev").addEventListener("click", prev);
 
-  // click a side card to bring it forward; click the centre one to open it
+  // drag / swipe state (declared first so the click handler can read `moved`)
+  const cf = document.getElementById("cf");
+  let down = false, startX = 0, moved = false;
+
+  // click a side card to bring it forward; click the centre one to open it.
+  // ignore the click that fires right after a drag/swipe so it doesn't open the lightbox by accident.
   cards.forEach((card, i) => card.addEventListener("click", () => {
+    if(moved){ moved = false; return; }
     if(i === idx) openLB(i); else go(i);
   }));
 
-  // drag / swipe
-  const cf = document.getElementById("cf");
-  let down = false, startX = 0, moved = false;
   const start = x => { down = true; startX = x; moved = false; clearInterval(timer); };
   const move  = x => { if(!down) return; if(Math.abs(x - startX) > 60){ x < startX ? next() : prev(); down = false; moved = true; } };
   const end   = () => { down = false; restart(); };
