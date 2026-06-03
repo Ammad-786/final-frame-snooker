@@ -8,7 +8,8 @@
      For full protection also set these as real HTTP headers at your host (Netlify/
      Cloudflare): X-Frame-Options: DENY, X-Content-Type-Options: nosniff,
      Strict-Transport-Security, Permissions-Policy. See _headers / netlify.toml notes. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; frame-src https://www.google.com https://maps.google.com; form-action 'self'; upgrade-insecure-requests" />
+<!-- frame-ancestors is set as a real HTTP header in _headers (it's ignored inside a <meta>). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'; frame-src https://www.google.com https://maps.google.com; form-action 'self'; upgrade-insecure-requests" />
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Final Frame Snooker Club — Pakistan's Premium Snooker Lounge</title>
 <meta name="description" content="Final Frame Snooker Club, Gulzar-e-Quaid, Islamabad — premium 24/7 snooker lounge. 8 pro tables, VIP lounge, VVIP room, PS4. Book your frame on WhatsApp." />
@@ -28,7 +29,10 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<!-- Fonts loaded non-render-blocking: preload, then swap media to 'all' in app.js -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Anton&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+<link id="gfonts" rel="stylesheet" media="print" href="https://fonts.googleapis.com/css2?family=Anton&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" /></noscript>
 
 <style>
   /* ============ CONFIG: change these brand values here ============ */
@@ -508,25 +512,25 @@
 <header class="nav" id="nav">
   <div class="nav-inner">
     <a href="#home" class="brand">
-      <img src="logo.png" alt="Final Frame Snooker Club" class="logo" onerror="this.style.display='none';this.nextElementSibling.querySelector('.ball').style.display='block'" />
+      <img src="logo.png" alt="Final Frame Snooker Club" class="logo" width="360" height="297" />
       <span style="display:flex;align-items:center;gap:12px"><span class="ball" style="display:none"></span><span>Final&nbsp;<b>Frame</b></span></span>
     </a>
     <nav class="nav-links" id="navLinks">
-      <button class="nav-close" id="navClose" aria-label="Close menu" onclick="closeMenu()">×</button>
+      <button class="nav-close" id="navClose" aria-label="Close menu">×</button>
       <span class="nav-eyebrow">Menu</span>
-      <a href="#why" onclick="closeMenu()">Why Us</a>
-      <a href="#pricing" onclick="closeMenu()">Pricing</a>
-      <a href="#gallery" onclick="closeMenu()">Gallery</a>
-      <a href="#visit" onclick="closeMenu()">Visit</a>
-      <a href="#book" class="nav-cta" onclick="closeMenu()">🎱 Book a Table</a>
+      <a href="#why">Why Us</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#visit">Visit</a>
+      <a href="#book" class="nav-cta">🎱 Book a Table</a>
       <div class="nav-foot">
         <a href="tel:+923155482934">📞 0315 5482934</a>
         <span>Open 24/7 · Gulzar-e-Quaid, Islamabad</span>
       </div>
     </nav>
-    <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Open menu"><span></span><span></span><span></span></button>
+    <button class="burger" id="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
   </div>
-  <div class="nav-backdrop" id="navBackdrop" onclick="closeMenu()"></div>
+  <div class="nav-backdrop" id="navBackdrop"></div>
 </header>
 
 <!-- ============ HERO ============ -->
@@ -679,7 +683,7 @@
         <div class="feat"><div class="ic">💳</div><div><b>Pay at the club</b><span>Cash, Easypaisa & JazzCash</span></div></div>
       </div>
 
-      <form class="booking" id="bookingForm" onsubmit="return sendBooking(event)">
+      <form class="booking" id="bookingForm">
         <div class="field">
           <label for="name">Your Name</label>
           <input type="text" id="name" placeholder="e.g. Ahmed Khan" required />
@@ -738,22 +742,22 @@
       <div class="cf-ghost" id="cfGhost" aria-hidden="true">01</div>
       <div class="cf-stage" id="cfStage">
         <figure class="cf-card" data-title="Welcome to the Arena" data-sub="Open 24/7 · Gulzar-e-Quaid, Islamabad">
-          <img src="img/exterior.jpg" alt="Final Frame Snooker Club exterior" loading="lazy" /><span class="cf-tag">Exterior</span>
+          <img src="img/exterior.jpg" alt="Final Frame Snooker Club exterior" loading="lazy" width="1500" height="675" /><span class="cf-tag">Exterior</span>
         </figure>
         <figure class="cf-card" data-title="The Main Stage" data-sub="Pro tables 1 &amp; 2 · championship cloth">
-          <img src="img/tables12.jpg" alt="Standard snooker tables 1 and 2" loading="lazy" /><span class="cf-tag">Main Hall</span>
+          <img src="img/tables12.jpg" alt="Standard snooker tables 1 and 2" loading="lazy" width="893" height="1500" /><span class="cf-tag">Main Hall</span>
         </figure>
         <figure class="cf-card" data-title="Break-Building Zone" data-sub="Six tournament-grade tables">
-          <img src="img/tables3456.jpg" alt="Standard snooker tables 3 to 6" loading="lazy" /><span class="cf-tag">Main Hall</span>
+          <img src="img/tables3456.jpg" alt="Standard snooker tables 3 to 6" loading="lazy" width="897" height="1500" /><span class="cf-tag">Main Hall</span>
         </figure>
         <figure class="cf-card" data-title="The VIP Frame" data-sub="Premium table · sofa seating · refreshments">
-          <img src="img/vip.jpg" alt="VIP lounge table with sofa seating" loading="lazy" /><span class="cf-tag">VIP</span>
+          <img src="img/vip.jpg" alt="VIP lounge table with sofa seating" loading="lazy" width="833" height="1500" /><span class="cf-tag">VIP</span>
         </figure>
         <figure class="cf-card" data-title="Game Off the Table" data-sub="PS4 lounge for the squad &amp; kids">
-          <img src="img/ps4.jpg" alt="Lounge with leather sofas and PS4" loading="lazy" /><span class="cf-tag">Lounge</span>
+          <img src="img/ps4.jpg" alt="Lounge with leather sofas and PS4" loading="lazy" width="675" height="1500" /><span class="cf-tag">Lounge</span>
         </figure>
         <figure class="cf-card" data-title="The VVIP Suite" data-sub="Your private room · your rules">
-          <img src="img/vvip.jpg" alt="VVIP private snooker room" loading="lazy" /><span class="cf-tag">VVIP</span>
+          <img src="img/vvip.jpg" alt="VVIP private snooker room" loading="lazy" width="675" height="1500" /><span class="cf-tag">VVIP</span>
         </figure>
       </div>
 
@@ -800,7 +804,7 @@
     <div class="foot-grid">
       <div>
         <a href="#home" class="brand foot">
-          <img src="logo.png" alt="Final Frame Snooker Club" class="logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+          <img src="logo.png" alt="Final Frame Snooker Club" class="logo" width="360" height="297" />
           <span style="display:none;align-items:center;gap:12px;font-size:1.05rem"><span class="ball"></span><span>Final&nbsp;<b>Frame</b></span></span>
         </a>
         <p>Pakistan's premium snooker lounge. Pro tables, chilled café and the best vibe in town. Book your frame and bring your A-game.</p>
@@ -847,173 +851,6 @@
   <svg viewBox="0 0 32 32"><path d="M16 .4C7.4.4.4 7.4.4 16c0 2.8.7 5.5 2.1 7.9L.3 31.7l8-2.1c2.3 1.3 4.9 1.9 7.7 1.9 8.6 0 15.6-7 15.6-15.6S24.6.4 16 .4zm0 28.5c-2.5 0-4.9-.7-7-1.9l-.5-.3-4.7 1.2 1.3-4.6-.3-.5a12.8 12.8 0 01-2-6.9C2.8 8.7 8.7 2.9 16 2.9c7.2 0 13.1 5.9 13.1 13.1S23.2 28.9 16 28.9zm7.2-9.8c-.4-.2-2.3-1.1-2.7-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.7-.6-3.2-2-1.2-1-2-2.3-2.2-2.7-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.6.1-.2.1-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.8-.6-.7-.9-.7h-.7c-.2 0-.6.1-1 .5-.3.4-1.3 1.3-1.3 3.1s1.3 3.6 1.5 3.9c.2.2 2.6 4 6.3 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.6.2-1.8-.1-.2-.3-.3-.7-.5z"/></svg>
 </a>
 
-<script>
-/* =================================================================
-   CONFIG — change ONLY this line. Put your WhatsApp number here.
-   Format: country code + number, NO +, NO spaces, NO leading 0.
-   Pakistan example: 0300 1234567  ->  923001234567
-   ================================================================= */
-const WHATSAPP_NUMBER = "923155482934";
-/* ================================================================= */
-
-// set whatsapp links everywhere
-const waBase = "https://wa.me/" + WHATSAPP_NUMBER;
-document.getElementById("waFloat").href = waBase + "?text=" + encodeURIComponent("Hi Final Frame! I'd like to book a snooker table.");
-document.getElementById("waFooter").href = waBase;
-document.getElementById("year").textContent = new Date().getFullYear();
-
-// nav scroll state
-const nav = document.getElementById("nav");
-addEventListener("scroll", () => nav.classList.toggle("scrolled", scrollY > 30));
-
-// mobile menu
-function setMenu(open){
-  document.getElementById("navLinks").classList.toggle("open", open);
-  document.getElementById("navBackdrop").classList.toggle("open", open);
-  document.getElementById("burger").classList.toggle("open", open);
-  document.body.classList.toggle("nav-open", open);
-}
-function toggleMenu(){ setMenu(!document.getElementById("navLinks").classList.contains("open")); }
-function closeMenu(){ setMenu(false); }
-// close on Escape
-addEventListener("keydown", e => { if(e.key === "Escape") closeMenu(); });
-
-// booking -> whatsapp
-function sendBooking(e){
-  e.preventDefault();
-  const v = id => document.getElementById(id).value.trim();
-  const name = v("name"), phone = v("phone"), date = v("date"),
-        time = v("time"), table = v("table"), duration = v("duration");
-
-  const msg =
-`🎱 *NEW BOOKING — Final Frame Snooker Club*
-
-👤 Name: ${name}
-📞 Phone: ${phone}
-📅 Date: ${date}
-🕑 Time: ${time}
-🎯 Table: ${table}
-⏱️ Duration: ${duration}
-
-Please confirm my table. Thank you!`;
-
-  // noopener/noreferrer prevents the opened tab from controlling this page (reverse tabnabbing)
-  window.open(waBase + "?text=" + encodeURIComponent(msg), "_blank", "noopener,noreferrer");
-  return false;
-}
-
-// scroll reveal
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(en => { if(en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); }});
-}, {threshold:.12});
-document.querySelectorAll(".reveal").forEach(el => io.observe(el));
-
-// set min date to today on the date picker
-document.getElementById("date").min = new Date().toISOString().split("T")[0];
-
-/* ===================== 3D COVERFLOW + ANIMATED LIGHTBOX ===================== */
-(() => {
-  const cards = [...document.querySelectorAll(".cf-card")];
-  if(!cards.length) return;
-  const dotsWrap = document.getElementById("cfDots");
-  const ghost = document.getElementById("cfGhost");
-  const capWrap = document.getElementById("cfCap");
-  const capH3 = capWrap.querySelector("h3");
-  const capP  = capWrap.querySelector("p");
-  let idx = 0, timer;
-
-  // build dots
-  cards.forEach((_, i) => {
-    const b = document.createElement("button");
-    b.setAttribute("aria-label", "Go to photo " + (i + 1));
-    b.addEventListener("click", () => go(i));
-    dotsWrap.appendChild(b);
-  });
-  const dots = [...dotsWrap.children];
-
-  // place each card in 3D relative to the active one
-  function layout(){
-    cards.forEach((card, i) => {
-      let off = i - idx;
-      const a = Math.abs(off);
-      const x   = off * 56;                       // % spread sideways
-      const z   = -a * 200;                       // push neighbours back
-      const rot = off === 0 ? 0 : (off < 0 ? 32 : -32);
-      const sc  = off === 0 ? 1 : Math.max(.62, .82 - (a-1)*0.12);
-      card.style.transform =
-        `translate(-50%,-50%) translateX(${x}%) translateZ(${z}px) rotateY(${rot}deg) scale(${sc})`;
-      card.style.opacity  = a > 2 ? 0 : 1;
-      card.style.zIndex   = 10 - a;
-      card.style.pointerEvents = a > 2 ? "none" : "auto";
-      card.classList.toggle("active", off === 0);
-    });
-    dots.forEach((d, i) => d.classList.toggle("active", i === idx));
-    // caption + ghost number
-    const c = cards[idx];
-    capH3.textContent = c.dataset.title;
-    capP.textContent  = c.dataset.sub;
-    ghost.textContent = String(idx + 1).padStart(2, "0");
-    capWrap.classList.remove("swap"); void capWrap.offsetWidth; capWrap.classList.add("swap");
-  }
-  function go(i){ idx = (i + cards.length) % cards.length; layout(); restart(); }
-  const next = () => go(idx + 1), prev = () => go(idx - 1);
-  function restart(){ clearInterval(timer); timer = setInterval(next, 4500); }
-
-  document.getElementById("cfNext").addEventListener("click", next);
-  document.getElementById("cfPrev").addEventListener("click", prev);
-
-  // drag / swipe state (declared first so the click handler can read `moved`)
-  const cf = document.getElementById("cf");
-  let down = false, startX = 0, moved = false;
-
-  // click a side card to bring it forward; click the centre one to open it.
-  // ignore the click that fires right after a drag/swipe so it doesn't open the lightbox by accident.
-  cards.forEach((card, i) => card.addEventListener("click", () => {
-    if(moved){ moved = false; return; }
-    if(i === idx) openLB(i); else go(i);
-  }));
-
-  const start = x => { down = true; startX = x; moved = false; clearInterval(timer); };
-  const move  = x => { if(!down) return; if(Math.abs(x - startX) > 60){ x < startX ? next() : prev(); down = false; moved = true; } };
-  const end   = () => { down = false; restart(); };
-  cf.addEventListener("mousedown", e => start(e.clientX));
-  cf.addEventListener("mousemove", e => move(e.clientX));
-  window.addEventListener("mouseup", end);
-  cf.addEventListener("touchstart", e => start(e.touches[0].clientX), {passive:true});
-  cf.addEventListener("touchmove",  e => move(e.touches[0].clientX), {passive:true});
-  cf.addEventListener("touchend", end);
-  cf.addEventListener("mouseenter", () => clearInterval(timer));
-  cf.addEventListener("mouseleave", restart);
-
-  layout(); restart();
-
-  /* ---- Lightbox (iris reveal + flip-in) ---- */
-  const lb = document.getElementById("lightbox");
-  const lbImg = document.getElementById("lbImg");
-  const lbCap = document.getElementById("lbCap");
-  let lbIdx = 0;
-
-  function showImg(i){
-    lbIdx = (i + cards.length) % cards.length;
-    const c = cards[lbIdx], img = c.querySelector("img");
-    lbImg.src = img.src; lbImg.alt = img.alt;
-    lbCap.innerHTML = "<b>" + c.dataset.title + "</b>" + c.dataset.sub;
-    lbImg.classList.remove("in"); void lbImg.offsetWidth; lbImg.classList.add("in"); // re-trigger flip
-  }
-  function openLB(i){ showImg(i); lb.classList.add("open"); document.body.style.overflow = "hidden"; }
-  function closeLB(){ lb.classList.remove("open"); document.body.style.overflow = ""; }
-
-  document.getElementById("lbClose").addEventListener("click", closeLB);
-  document.getElementById("lbNext").addEventListener("click", () => showImg(lbIdx + 1));
-  document.getElementById("lbPrev").addEventListener("click", () => showImg(lbIdx - 1));
-  lb.addEventListener("click", e => { if(e.target === lb) closeLB(); });
-  addEventListener("keydown", e => {
-    if(!lb.classList.contains("open")) return;
-    if(e.key === "Escape") closeLB();
-    else if(e.key === "ArrowRight") showImg(lbIdx + 1);
-    else if(e.key === "ArrowLeft") showImg(lbIdx - 1);
-  });
-})();
-</script>
+<script src="app.js"></script>
 </body>
 </html>
